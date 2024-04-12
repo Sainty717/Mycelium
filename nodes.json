@@ -1,0 +1,110 @@
+[
+    {
+        "id": "AI",
+        "color": "#fbff00"
+    },
+    {
+        "id": "Machine Learning",
+        "color": "#000aff"
+    },
+    {
+        "id": "Sentiment Analysis",
+        "color": "#f78200"
+    },
+    {
+        "id": "AutoML (Automated Machine Learning)",
+        "color": "#f78200"
+    },
+    {
+        "id": "Natural Language Processing",
+        "color": "#000aff"
+    },
+    {
+        "id": "Simulation Models",
+        "color": "#f78200"
+    },
+    {
+        "id": "CPU Processing",
+        "color": "#000aff"
+    },
+    {
+        "id": "Neural Networks",
+        "color": "#f78200"
+    },
+    {
+        "id": "Speech to Text",
+        "color": "#f78200"
+    },
+    {
+        "id": "Computer Vision",
+        "color": "#00ff0f"
+    },
+    {
+        "id": "Nvidia GPU",
+        "color": "#00ff0f"
+    },
+    {
+        "id": "Supervised Learning",
+        "color": "#f78200"
+    },
+    {
+        "id": "Decision Making",
+        "color": "#000aff"
+    },
+    {
+        "id": "Object Detection",
+        "color": "#f78200"
+    },
+    {
+        "id": "Text Classification",
+        "color": "#f78200"
+    },
+    {
+        "id": "Deep Learning",
+        "color": "#f78200"
+    },
+    {
+        "id": "Object Tracking",
+        "color": "#f78200"
+    },
+    {
+        "id": "Text to Speech",
+        "color": "#f78200"
+    },
+    {
+        "id": "Generative AI",
+        "color": "#00ff0f"
+    },
+    {
+        "id": "Optimization Algorithms",
+        "color": "#f78200"
+    },
+    {
+        "id": "Tokens",
+        "color": "#f78200"
+    },
+    {
+        "id": "Language Generation",
+        "color": "#f78200"
+    },
+    {
+        "id": "Pose Estimation",
+        "color": "#f78200"
+    },
+    {
+        "id": "Unsupervised Learning",
+        "color": "#f78200"
+    },
+    {
+        "id": "Large Language Models",
+        "color": "#00ff0f"
+    },
+    {
+        "id": "Rag",
+        "color": "#f78200"
+    },
+    {
+        "id": "Visualization Techniques",
+        "color": "#f78200"
+    }
+]

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Understanding</title>
+  <link rel="icon" type="image/x-icon" href="http://brig.digital:8502/pdfs/path1.png">
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background-color: #1E1E1E; /* Set dark background color */
+        color: #FFFFFF; /* Set text color to white */
+    }
+
+    .graph-container {
+        width: 100%;
+        height: 100%;
+        cursor: grab;
+        position: relative;
+    }
+
+    .node {
+      cursor: pointer;
+    }
+
+    .node circle {
+      stroke: #000;
+      stroke-width: 2px;
+    }
+
+    .node text {
+      font-size: 12px;
+      text-anchor: middle;
+    }
+
+    .link {
+      stroke: black;
+      stroke-width: 2px;
+    }
+
+    .search-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 9999;
+    }
+
+    .node:hover .hover-circle {
+      display: block;
+    }
+
+    .hover-circle {
+      display: none;
+    }
+
+    .pdf-window {
+      position: absolute;
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      border: 2px solid #fff;
+      border-radius: 5px;
+      z-index: 999;
+      display: none;
+      transition: transform 0.5s ease-in-out;
+      /* Adjust width and height */
+      width: 800px; /* Twice as wide */
+      height: 300px; /* Half as high */
+    }
+  </style>
+</head>
+<body>
+  <div class="search-container">
+    <input list="nodes" type="text" id="searchInput" placeholder="Search node...">
+    <datalist id="nodes">
+      <!-- Suggestions will be populated here dynamically -->
+    </datalist>
+    <button id="button" onclick="searchNode()">Go</button>
+  </div>
+
+  <div class="graph-container">
+    <svg width="100%" height="100%">
+      <g id="container"></g>
+    </svg>
+    <div class="pdf-window" id="pdfWindow">
+      <button onclick="closePdfWindow()">Close</button>
+      <a href="#" target="_blank" id="openInTabLink">Open in new tab</a>
+    </div>
+  </div>
+
+  <script>
+    var width = window.innerWidth,
+        height = window.innerHeight;
+    
+    var svg = d3.select("svg"),
+        container = d3.select("#container"),
+        nodes = {{ nodes|tojson|safe }},
+        links = {{ links|tojson|safe }},
+        radius = 10;
+    
+    var zoom = d3.zoom()
+        .scaleExtent([0.3, 8])
+        .on("zoom", function () {
+            container.attr("transform", d3.event.transform);
+        });
+    
+    var zIndexCounter = 1;
+        svg.call(zoom);
+
+    var simulation = d3.forceSimulation(nodes)
+        .force("link", d3.forceLink(links).id(function(d) { return d.id; }).distance(130))
+        .force("charge", d3.forceManyBody().strength(-1100))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .on("tick", ticked);
+
+    var link = container.selectAll(".link")
+        .data(links)
+        .enter().append("line")
+        .attr("class", "link")
+        .style("stroke", "darkslategray")
+        .style("stroke-width", "2px");
+
+    var node = container.selectAll(".node")
+        .data(nodes)
+        .enter().append("g")
+        .attr("class", "node")
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended))
+        .on("mouseover", function(d) {
+            d3.select(this).select("circle").attr("fill", d.color); // Change node color on hover
+            d3.selectAll(".link")
+              .filter(function(l) { return l.source === d || l.target === d; })
+              .style("stroke", d.color); // Change link color on hover
+            d3.select(this).select(".hover-circle").style("display", "block");
+            d3.select(this).select("button").transition().duration(300).style("opacity", 1); // Fade in button
+        })
+        .on("mouseout", function(d) {
+            d3.select(this).select("circle").attr("fill", function(d) { return d.color; }); // Revert node color
+            d3.selectAll(".link").style("stroke", "darkslategray"); // Revert link color
+            d3.select(this).select(".hover-circle").style("display", "none");
+            d3.select(this).select("button").transition().duration(300).style("opacity", 0); // Fade out button
+        });
+
+    node.append("circle")
+        .attr("r", radius)
+        .attr("fill", function(d) { return d.color; });
+
+    node.append("text")
+        .attr("dx", 0)
+        .attr("dy", -radius - 5)
+        .attr("text-anchor", "middle")
+        .attr("fill", "white")
+        .text(function(d) { return d.id; });
+
+    node.append("circle")
+        .attr("class", "hover-circle")
+        .attr("r", radius / 2)
+        .attr("fill", "crimson")
+        .attr("stroke", "dimgray")
+        .attr("stroke-width", "0.5px")
+        .on("click", function(d) {
+            openPdfWindow(d);
+            d3.event.stopPropagation(); // Stop propagation of the click event
+        });
+    
+    var pdfWindows = {}; // Object to store open PDF windows
+    var pdfWindowIndex = 0; // Index counter for generating unique PDF window IDs
+    
+    function openPdfWindow(nodeData) {
+        var filename = encodeURIComponent(nodeData.id.replace(/ /g, '_')) + ".pdf";
+        var pdfWindowId = "pdfWindow-" + pdfWindowIndex++; // Unique identifier for PDF window
+        zIndexCounter++;
+    
+        // Create a new PDF window element
+        var pdfWindow = document.createElement('div');
+        pdfWindow.setAttribute('class', 'pdf-window');
+        pdfWindow.setAttribute('id', pdfWindowId);
+        pdfWindow.style.display = "block";
+        pdfWindow.innerHTML = `
+            <button onclick="closePdfWindow('${pdfWindowId}')">Close</button>
+            <button onclick="window.open('http://brig.digital:8502/pdfs/${filename}', '_blank')">Open in new tab</button>
+            <div>
+                <embed src="http://brig.digital:8502/pdfs/${filename}" type="application/pdf" width="100%" height="295px" />
+            </div>
+        `;
+    
+        // Position PDF window 10px below the last opened PDF window, or at the top left if it's the first one
+        var topOffset = Object.keys(pdfWindows).length * 10; // Offset for each new window
+        pdfWindow.style.position = "absolute";
+        pdfWindow.style.top = topOffset + "px";
+        pdfWindow.style.left = "0";
+        pdfWindow.style.zIndex = zIndexCounter++;
+        // Append the PDF window to the body
+        document.body.appendChild(pdfWindow);
+        pdfWindows[pdfWindowId] = pdfWindow; // Store reference to the PDF window
+    
+        // Apply drag behavior to the PDF window
+        d3.select(`#${pdfWindowId}`).call(d3.drag()
+            .on("start", function() {
+                d3.event.sourceEvent.stopPropagation();
+                // Bring the dragged window to the front
+                pdfWindow.style.zIndex = getMaxZIndex() + 1;
+            })
+            .on("drag", function() {
+                var newX = parseInt(pdfWindow.style.left) + d3.event.dx;
+                var newY = parseInt(pdfWindow.style.top) + d3.event.dy;
+                pdfWindow.style.left = newX + "px";
+                pdfWindow.style.top = newY + "px";
+            })
+        );
+    
+        // Apply a force to push other nodes away
+        nodes.forEach(function(d) {
+            if (d !== nodeData) {
+                d.fx = null;
+                d.fy = null;
+            }
+        });
+        simulation.alpha(0.3).restart();
+    
+        // Change the color of the link and PDF window outline to match the color of the node
+        var color = nodeData.color;
+        pdfWindow.style.borderColor = color;
+        var link = container.selectAll(".link");
+        link.style("stroke", function(d) {
+            return (d.source === nodeData || d.target === nodeData) ? color : "darkslategray";
+        });
+    }
+    
+    function closePdfWindow(pdfWindowId) {
+        var pdfWindow = pdfWindows[pdfWindowId];
+        if (pdfWindow) {
+            pdfWindow.style.display = "none"; // Hide the PDF window
+            delete pdfWindows[pdfWindowId]; // Remove reference from the list
+        }
+    }
+    
+    function getMaxZIndex() {
+        var maxZIndex = 0;
+        for (var key in pdfWindows) {
+            var zIndex = parseInt(pdfWindows[key].style.zIndex);
+            if (!isNaN(zIndex) && zIndex > maxZIndex) {
+                maxZIndex = zIndex;
+            }
+        }
+        return maxZIndex;
+    }
+    
+    // Track mouse movement on the document body only when mouse button is pressed
+    var isDragging = false;
+    document.body.addEventListener('mousedown', function(event) {
+        isDragging = true;
+    });
+    
+    document.body.addEventListener('mouseup', function(event) {
+        isDragging = false;
+    });
+    
+    document.body.addEventListener('mousemove', function(event) {
+        if (isDragging) {
+            for (var key in pdfWindows) {
+                var pdfWindow = pdfWindows[key];
+                if (pdfWindow.style.display === "block") {
+                    var rect = pdfWindow.getBoundingClientRect();
+                    // Check if the mouse is within the boundaries of the PDF window
+                    if (
+                        event.clientX >= rect.left && event.clientX <= rect.right &&
+                        event.clientY >= rect.top && event.clientY <= rect.bottom
+                    ) {
+                        // If the mouse is inside the PDF window, update its position
+                        pdfWindow.style.left = (parseInt(pdfWindow.style.left) + event.movementX) + "px";
+                        pdfWindow.style.top = (parseInt(pdfWindow.style.top) + event.movementY) + "px";
+                    }
+                }
+            }
+        }
+    });
+
+
+
+
+
+    function dragstarted(d) {
+        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    function dragged(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+        if (!d3.event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+    }
+
+    restart();
+
+    function restart() {
+      link = link.data(links);
+      link.enter().append("line")
+          .attr("class", "link")
+          .style("stroke", "black")
+          .style("stroke-width", "2px")
+          .merge(link);
+
+      simulation.nodes(nodes);
+      simulation.force("link").links(links);
+      simulation.alpha(1).restart();
+    }
+
+    function ticked() {
+      link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+      node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    }
+
+    function searchNode() {
+      var selectedVal = document.getElementById('searchInput').value;
+      var selectedNode = nodes.find(function(d) { return d.id === selectedVal; });
+      if (selectedNode) {
+        // Calculate the offset to center the selected node
+        var offsetX = width / 2 - selectedNode.x;
+        var offsetY = height / 2 - selectedNode.y;
+        // Apply transition to zoom to the selected node
+        svg.transition()
+          .duration(750)
+          .call(zoom.transform, d3.zoomIdentity.translate(offsetX, offsetY).scale(1));
+          
+      }
+    }
+
+    // Populate suggestions
+    var suggestions = nodes.map(function(node) { return node.id; });
+    var datalist = d3.select("#nodes");
+    datalist.selectAll("option")
+      .data(suggestions)
+      .enter().append("option")
+      .attr("value", function(d) { return d; });
+
+    // Handle Enter key for search
+    document.getElementById("searchInput").addEventListener("keyup", function(event) {
+      if (event.key === "Enter") {
+        searchNode();
+      }
+    });
+
+    // Handle Go button click for search
+    document.getElementById("button").addEventListener("click", function(event) {
+      searchNode();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+[
+    {
+        "source": "AutoML (Automated Machine Learning)",
+        "target": "Machine Learning"
+    },
+    {
+        "source": "Computer Vision",
+        "target": "AI"
+    },
+    {
+        "source": "Computer Vision",
+        "target": "Nvidia GPU"
+    },
+    {
+        "source": "Decision Making",
+        "target": "AI"
+    },
+    {
+        "source": "Decision Making",
+        "target": "CPU Processing"
+    },
+    {
+        "source": "Deep Learning",
+        "target": "Machine Learning"
+    },
+    {
+        "source": "Generative AI",
+        "target": "AI"
+    },
+    {
+        "source": "Generative AI",
+        "target": "Nvidia GPU"
+    },
+    {
+        "source": "Language Generation",
+        "target": "Natural Language Processing"
+    },
+    {
+        "source": "Language Generation",
+        "target": "Large Language Models"
+    },
+    {
+        "source": "Large Language Models",
+        "target": "Generative AI"
+    },
+    {
+        "source": "Large Language Models",
+        "target": "Rag"
+    },
+    {
+        "source": "Large Language Models",
+        "target": "Tokens"
+    },
+    {
+        "source": "Machine Learning",
+        "target": "CPU Processing"
+    },
+    {
+        "source": "Natural Language Processing",
+        "target": "AI"
+    },
+    {
+        "source": "Natural Language Processing",
+        "target": "CPU Processing"
+    },
+    {
+        "source": "Neural Networks",
+        "target": "Deep Learning"
+    },
+    {
+        "source": "Object Detection",
+        "target": "Computer Vision"
+    },
+    {
+        "source": "Object Tracking",
+        "target": "Computer Vision"
+    },
+    {
+        "source": "Optimization Algorithms",
+        "target": "Decision Making"
+    },
+    {
+        "source": "Pose Estimation",
+        "target": "Computer Vision"
+    },
+    {
+        "source": "Sentiment Analysis",
+        "target": "Natural Language Processing"
+    },
+    {
+        "source": "Sentiment Analysis",
+        "target": "Large Language Models"
+    },
+    {
+        "source": "Simulation Models",
+        "target": "Decision Making"
+    },
+    {
+        "source": "Speech to Text",
+        "target": "Natural Language Processing"
+    },
+    {
+        "source": "Text Classification",
+        "target": "Natural Language Processing"
+    },
+    {
+        "source": "Text Classification",
+        "target": "Large Language Models"
+    },
+    {
+        "source": "Text to Speech",
+        "target": "Natural Language Processing"
+    },
+    {
+        "source": "Text to Speech",
+        "target": "Large Language Models"
+    },
+    {
+        "source": "Unsupervised Learning",
+        "target": "Machine Learning"
+    },
+    {
+        "source": "Visualization Techniques",
+        "target": "Decision Making"
+    },
+    {
+        "source": "Supervised Learning",
+        "target": "Machine Learning"
+    }
+]
