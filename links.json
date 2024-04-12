@@ -32,11 +32,11 @@
         "target": "Nvidia GPU"
     },
     {
-        "source": "Language Generation",
-        "target": "Natural Language Processing"
+        "source": "Natural Language Generation (NLG)",
+        "target": "Natural Language Processing (NLP)"
     },
     {
-        "source": "Language Generation",
+        "source": "Natural Language Generation (NLG)",
         "target": "Large Language Models"
     },
     {
@@ -56,11 +56,11 @@
         "target": "CPU Processing"
     },
     {
-        "source": "Natural Language Processing",
+        "source": "Natural Language Processing (NLP)",
         "target": "AI"
     },
     {
-        "source": "Natural Language Processing",
+        "source": "Natural Language Processing (NLP)",
         "target": "CPU Processing"
     },
     {
@@ -85,7 +85,7 @@
     },
     {
         "source": "Sentiment Analysis",
-        "target": "Natural Language Processing"
+        "target": "Natural Language Processing (NLP)"
     },
     {
         "source": "Sentiment Analysis",
@@ -97,11 +97,11 @@
     },
     {
         "source": "Speech to Text",
-        "target": "Natural Language Processing"
+        "target": "Natural Language Processing (NLP)"
     },
     {
         "source": "Text Classification",
-        "target": "Natural Language Processing"
+        "target": "Natural Language Processing (NLP)"
     },
     {
         "source": "Text Classification",
@@ -109,7 +109,7 @@
     },
     {
         "source": "Text to Speech",
-        "target": "Natural Language Processing"
+        "target": "Natural Language Processing (NLP)"
     },
     {
         "source": "Text to Speech",
