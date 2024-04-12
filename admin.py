@@ -3,6 +3,7 @@ import json
 import os
 import time
 
+
 # Function to load JSON files
 def load_json(filename):
     with open(filename, 'r') as f:
@@ -32,6 +33,17 @@ def update_pdf(nodes_data, node_id, new_pdf):
     with open(pdf_file_path, 'wb') as f:
         f.write(new_pdf.getvalue())
     return pdf_file_path
+
+# Function to update links with new node names
+def update_links(links_data, old_node_name, new_node_name):
+    updated_links_data = []
+    for link in links_data:
+        if link['source'] == old_node_name:
+            link['source'] = new_node_name
+        if link['target'] == old_node_name:
+            link['target'] = new_node_name
+        updated_links_data.append(link)
+    return updated_links_data
 
 # Streamlit app
 # Streamlit app
@@ -171,7 +183,37 @@ def main():
         else:
             st.sidebar.warning('Please select a link to remove.')
 
+    st.sidebar.header('Change Node Name')
+    selected_node_for_name_change = st.sidebar.selectbox('Select Node', [''] + [node['id'] for node in nodes_data], key='select_node_name')
 
+    if selected_node_for_name_change:
+        new_node_name = st.sidebar.text_input('New Node Name', value=selected_node_for_name_change, key='new_node_name_input')
+        if st.sidebar.button('Change Name', key='change_name_button'):
+            if new_node_name:
+                # Change node name
+                node_index = next((index for index, node in enumerate(nodes_data) if node['id'] == selected_node_for_name_change), None)
+                if node_index is not None:
+                    old_node_name = nodes_data[node_index]['id']
+                    nodes_data[node_index]['id'] = new_node_name
+                    save_json(nodes_data, 'nodes.json')
+
+                    # Rename associated PDF file
+                    old_pdf_path = f"pdfs/{old_node_name.replace(' ', '_')}.pdf"
+                    new_pdf_path = f"pdfs/{new_node_name.replace(' ', '_')}.pdf"
+                    if os.path.exists(old_pdf_path):
+                        os.rename(old_pdf_path, new_pdf_path)
+                    
+                    # Update links with new node name
+                    links_data = update_links(links_data, old_node_name, new_node_name)
+                    save_json(links_data, 'links.json')
+                    
+                    st.sidebar.success('Node name changed successfully!')
+                    time.sleep(1)
+                    st.experimental_rerun()
+                else:
+                    st.sidebar.warning('Please select a valid node.')
+            else:
+                st.sidebar.warning('Please provide a new node name.')
     
     # Node color changer
     st.sidebar.header('Change Node Color')
