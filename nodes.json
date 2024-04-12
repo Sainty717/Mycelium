@@ -16,7 +16,7 @@
         "color": "#f78200"
     },
     {
-        "id": "Natural Language Processing",
+        "id": "Natural Language Processing (NLP)",
         "color": "#000aff"
     },
     {
@@ -25,7 +25,7 @@
     },
     {
         "id": "CPU Processing",
-        "color": "#000aff"
+        "color": "#ffff00"
     },
     {
         "id": "Neural Networks",
@@ -84,7 +84,7 @@
         "color": "#f78200"
     },
     {
-        "id": "Language Generation",
+        "id": "Natural Language Generation (NLG)",
         "color": "#f78200"
     },
     {
