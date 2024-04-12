@@ -1,17 +1,40 @@
 from flask import Flask, render_template, jsonify
 import json
+import os
+import time
 
 app = Flask(__name__)
 
-# Read nodes data from JSON file
-with open("nodes.json", "r") as f:
-    nodes_content = f.read()
-    nodes = json.loads(nodes_content)
+nodes_file = "nodes.json"
+links_file = "links.json"
 
-# Read links data from JSON file
-with open("links.json", "r") as f:
-    links_content = f.read()
-    links = json.loads(links_content)
+def load_json(filename):
+    with open(filename, "r") as f:
+        data = json.load(f)
+    return data
+
+# Read initial nodes and links data
+nodes = load_json(nodes_file)
+links = load_json(links_file)
+
+def check_file_changes():
+    global nodes, links
+    while True:
+        # Check modification time of nodes file
+        nodes_modified_time = os.path.getmtime(nodes_file)
+        if nodes_modified_time > os.path.getmtime(links_file):
+            # Nodes file has been modified
+            nodes = load_json(nodes_file)
+            links = load_json(links_file)
+            print("Nodes file updated. Reloading data...")
+        # Check modification time of links file
+        links_modified_time = os.path.getmtime(links_file)
+        if links_modified_time > os.path.getmtime(nodes_file):
+            # Links file has been modified
+            nodes = load_json(nodes_file)
+            links = load_json(links_file)
+            print("Links file updated. Reloading data...")
+        time.sleep(5)  # Check every 5 seconds
 
 @app.route('/')
 def index():
@@ -26,5 +49,10 @@ def get_links():
     return jsonify(links)
 
 if __name__ == '__main__':
+    # Start the file change checker thread
+    import threading
+    file_change_checker = threading.Thread(target=check_file_changes)
+    file_change_checker.daemon = True
+    file_change_checker.start()
 
-    app.run(debug=True,host='0.0.0.0', port="8501")
+    app.run(debug=True, host="0.0.0.0", port="8501")
