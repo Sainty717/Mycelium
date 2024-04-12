@@ -31,7 +31,7 @@ cd Mycelium
 Use Docker Compose to build and run the Docker containers:
 
 ```
-docker-compose up --build
+docker-compose up -d --build
 ```
 
 
