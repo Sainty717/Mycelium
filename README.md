@@ -1,7 +1,7 @@
 
 # Mycelium Web Application
+Hi There, I have built an app that allows you build your own super Dynamic Realationship graphs that link directly to docuementation, as an educational tool to better undrestand the realationship between complex topics products or concepts.
 
-This repository contains a Dockerized web application that includes a Flask web server, a Streamlit admin panel, and a PDF viewer. The applications are all running within a single Docker container and can be accessed through different ports.
 
 ## Setup Guide
 
