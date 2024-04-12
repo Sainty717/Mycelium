@@ -1,5 +1,5 @@
 
-# Flask and Streamlit Dockerized Web Application
+# Mycelium Web Application
 
 This repository contains a Dockerized web application that includes a Flask web server, a Streamlit admin panel, and a PDF viewer. The applications are all running within a single Docker container and can be accessed through different ports.
 
@@ -17,26 +17,23 @@ Make sure you have Docker and Docker Compose installed on your system.
 ### Clone the Repository
 
 Clone this repository to your local machine using Git:
-
+```
 git clone https://github.com/your_username/flask-streamlit-docker.git
-
-csharp
+```
 
 
 ### Run the Application
 
 Navigate into the cloned repository directory:
-
-cd flask-streamlit-docker
-
-arduino
-
-
+```
+cd Mycelium
+```
 Use Docker Compose to build and run the Docker containers:
 
+```
 docker-compose up --build
+```
 
-markdown
 
 
 ### Access the Applications
@@ -55,8 +52,4 @@ Ensure that the following ports are available on your system:
 - **8502**: PDF viewer
 - **8503**: Streamlit admin panel
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-Feel free to customize the URLs, paths, and other details as needed for your project.
