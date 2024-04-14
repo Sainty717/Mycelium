@@ -16,7 +16,8 @@ Make sure you have Docker and Docker Compose installed on your system.
 
 - [Docker installation guide](https://docs.docker.com/get-docker/)
 - [Docker Compose installation guide](https://docs.docker.com/compose/install/)
-- apache2-utils for setting the password ``` sudo apt install apache2-utils ```
+- apache2-utils for setting the password
+  ``` sudo apt install apache2-utils ```
 
 ### Clone the Repository
 
