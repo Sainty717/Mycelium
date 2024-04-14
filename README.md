@@ -34,7 +34,9 @@ Navigate into the cloned repository directory:
 cd Mycelium
 ```
 Set Password
+
 ```htpasswd -c ./htpasswd/.htpasswd <your new username>```
+
 Use Docker Compose to build and run the Docker containers:
 
 ```
