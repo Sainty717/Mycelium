@@ -16,6 +16,7 @@ Make sure you have Docker and Docker Compose installed on your system.
 
 - [Docker installation guide](https://docs.docker.com/get-docker/)
 - [Docker Compose installation guide](https://docs.docker.com/compose/install/)
+- apache2-utils for setting the password ``` sudo apt install apache2-utils ```
 
 ### Clone the Repository
 
@@ -31,6 +32,8 @@ Navigate into the cloned repository directory:
 ```
 cd Mycelium
 ```
+Set Password
+```htpasswd -c ./htpasswd/.htpasswd <your new username>```
 Use Docker Compose to build and run the Docker containers:
 
 ```
@@ -43,16 +46,10 @@ docker-compose up -d --build
 
 Once the containers are up and running, you can access the applications using the following URLs:
 
-- **Web App (Flask)**: [http://localhost:8501](http://localhost:8501)
-- **PDF Viewer**: [http://localhost:8502](http://localhost:8502)
-- **Admin Panel (Streamlit)**: [http://localhost:8503](http://localhost:8503)
+- **Web App (Flask)**: [http://localhost:8501](http://localhost)
+- **PDF Viewer**: [http://localhost:8502](http://localhost/pdfs)
+- **Admin Panel password protected(Streamlit)**: [http://localhost:8503](http://localhost/admin)
 
-### Port Requirements
 
-Ensure that the following ports are available on your system:
-
-- **8501**: Flask web application
-- **8502**: PDF viewer
-- **8503**: Streamlit admin panel
 
 
