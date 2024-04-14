@@ -21,7 +21,7 @@ Make sure you have Docker and Docker Compose installed on your system.
 
 Clone this repository to your local machine using Git:
 ```
-git clone https://github.com/Sainty717/Mycelium.git
+git clone https://github.com/your_username/flask-streamlit-docker.git
 ```
 
 
