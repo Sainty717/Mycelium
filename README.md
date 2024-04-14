@@ -51,9 +51,9 @@ docker-compose up -d --build
 
 Once the containers are up and running, you can access the applications using the following URLs:
 
-- **Web App (Flask)**: [http://localhost:8501](http://localhost)
-- **PDF Viewer**: [http://localhost:8502](http://localhost/pdfs)
-- **Admin Panel password protected(Streamlit)**: [http://localhost:8503](http://localhost/admin)
+- **Web App (Flask)**: [http://localhost](http://localhost)
+- **PDF Viewer**: [http://localhost/pdf](http://localhost/pdfs)
+- **Admin Panel password protected(Streamlit)**: [http://localhost/admin](http://localhost/admin)
 
 
 
