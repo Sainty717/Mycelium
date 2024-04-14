@@ -182,9 +182,9 @@
         pdfWindow.style.display = "block";
         pdfWindow.innerHTML = `
             <button onclick="closePdfWindow('${pdfWindowId}')">Close</button>
-            <button onclick="window.open('http://brig.digital:8502/pdfs/${filename}', '_blank')">Open in new tab</button>
+            <button onclick="window.open('/pdfs/${filename}', '_blank')">Open in new tab</button>
             <div>
-                <embed src="http://brig.digital:8502/pdfs/${filename}" type="application/pdf" width="100%" height="295px" />
+                <embed src="/pdfs/${filename}" type="application/pdf" width="100%" height="295px" />
             </div>
         `;
     
