@@ -3,8 +3,9 @@
 Hi There, I have built an app that allows you build your own super Dynamic Realationship graphs that link directly to docuementation, as an educational tool to better undrestand the realationship between complex topics products or concepts.
 
 Tested and running on Pi 4 and Pi 5 
-
+Mycelium Web App
 ![](https://github.com/Sainty717/Mycelium/blob/main/ui.gif?raw=true)
+Admin Pannel
 ![](https://github.com/Sainty717/Mycelium/blob/main/M-admin.png?raw=true)
 
 ## Setup Guide
