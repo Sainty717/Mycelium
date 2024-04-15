@@ -60,8 +60,8 @@ Once the containers are up and running, you can access the applications using th
 
  - Replace the Nginx conf with nginx-https.conf
  - Replace The docker-compose.yaml with docker-compose-https.yaml
- - Edit the nginx-https.conf with your Domain Name
- - Add certificate.pem and privatekey.pem to the Mycelium Directory (If your new to this process you need a domain name, exposed port to the server and a certificate. I personally reccommend Certbot for certificates and cheapname.com for a domain name register)
+ - Edit the nginx-https.conf with your Domain Name  (If your new to this process you need a domain name, exposed port to the server and a certificate. I personally reccommend Certbot for certificates and cheapname.com for a domain name register)
+ - Add certificate.pem and privatekey.pem to the Mycelium git Directory
  - ```
    docker compose up -d
    ```
