@@ -12,7 +12,7 @@ Follow these steps to set up and run the web application:
 
 ### Prerequisites
 
-Make sure you have Docker and Docker Compose installed on your system.
+Make sure you have Docker,Docker Compose and apache2-utils installed on your system.
 
 - [Docker installation guide](https://docs.docker.com/get-docker/)
 - [Docker Compose installation guide](https://docs.docker.com/compose/install/)
