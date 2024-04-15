@@ -56,5 +56,6 @@ Once the containers are up and running, you can access the applications using th
 - **Mycelium Admin Panel**: [http://localhost/admin](http://localhost/admin)
 
 
-
+### Enable HTTPS
+There is a HTTPS file there but you will need to add your key and perm to the docker compose and local directory.
 
