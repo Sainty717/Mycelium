@@ -33,7 +33,7 @@ Navigate into the cloned repository directory:
 ```
 cd Mycelium
 ```
-Set Password
+Set Admin Pannel Username and Password
 
 ```
 htpasswd -c ./htpasswd/.htpasswd <your new username>
