@@ -5,6 +5,7 @@ Hi There, I have built an app that allows you build your own super Dynamic Reala
 Tested and running on Pi 4 and Pi 5 
 
 ![](https://github.com/Sainty717/Mycelium/blob/main/ui.gif?raw=true)
+![](https://github.com/Sainty717/Mycelium/blob/main/ui.gif?raw=true)
 
 ## Setup Guide
 
