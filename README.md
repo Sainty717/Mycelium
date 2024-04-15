@@ -57,9 +57,15 @@ Once the containers are up and running, you can access the applications using th
 
 
 ### Enable HTTPS (in progress)
-Replace the Nginx conf with nginx-https.conf
-Insure your adding
-        ssl_certificate /path/to/your/certificate.pem;
-        ssl_certificate_key /path/to/your/privatekey.pem;
+
+ - Replace the Nginx conf with nginx-https.conf
+ - Replace The docker-compose.yaml with docker-compose-https.yaml
+ - Edit the nginx-https.conf with your Domain Name
+ - Add certificate.pem and privatekey.pem to the Mycelium Directory
+ - ```
+   docker compose up -d
+   ```
+   
+
 
 
