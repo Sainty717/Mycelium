@@ -63,12 +63,12 @@
 
     .toggle-switch {
       display: inline-block;
-      width: 60px;
-      height: 34px;
+      width: 50px; /* Adjust width to make it smaller */
+      height: 20px; /* Adjust height to make it smaller */
       position: relative;
       cursor: pointer;
     }
-
+    
     .toggle-slider {
       position: absolute;
       top: 0;
@@ -76,17 +76,17 @@
       right: 0;
       bottom: 0;
       background-color: #ccc;
-      border-radius: 34px;
+      border-radius: 20px; /* Adjust border-radius to match the height */
       transition: .4s;
     }
-
+    
     .toggle-slider:before {
       position: absolute;
       content: "";
-      height: 26px;
-      width: 26px;
+      height: 16px; /* Adjust height to center the slider */
+      width: 16px; /* Adjust width to make it smaller */
       left: 4px;
-      bottom: 4px;
+      bottom: 2px; /* Adjust bottom to center the slider */
       background-color: white;
       border-radius: 50%;
       transition: .4s;
@@ -100,13 +100,7 @@
       transform: translateX(26px);
     }
 
-    .toggle-switch2 {
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-      position: relative;
-      cursor: pointer;
-    }
+
 
     .slider-container {
         margin-top: 10px;
@@ -171,7 +165,7 @@
   </div>
 
 <!-- Controls container 1 -->
-<div class="controls-container" style="top: 40px;">
+<div class="controls-container" style="top: 45px;">
   <!-- Toggle switch for adjusting node radius -->
   <div class="node-controls">
     <label for="toggleSwitch">Dynamic Node Size</label>
@@ -204,7 +198,7 @@
 </div>
 
 <!-- Controls container 2 -->
-<div class="controls-container" style="top: 180px;">
+<div class="controls-container" style="top: 150px;">
   <!-- Toggle switch for locking everything in position -->
   <label for="lockToggle">Lock All Nodes</label>
   <div class="node-controls">
