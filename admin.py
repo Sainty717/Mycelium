@@ -3,7 +3,6 @@ import json
 import os
 import time
 
-
 # Function to load JSON files
 def load_json(filename):
     with open(filename, 'r') as f:
@@ -46,7 +45,6 @@ def update_links(links_data, old_node_name, new_node_name):
     return updated_links_data
 
 # Streamlit app
-# Streamlit app
 def main():
     st.title('Mycelium')
 
@@ -62,13 +60,14 @@ def main():
     # Load data
     nodes_data = load_json('nodes.json')
     links_data = load_json('links.json')
-    #st.beta_set_page_config(page_title='Mycelium', page_icon=logo) 
-    #st.set_page_config(page_title="Stock Price", page_icon=logo, layout="centered", initial_sidebar_state = "auto")
-   
-    # Sidebar panel
-    st.sidebar.header('Node and Link Removal')
-    node_to_remove = st.sidebar.selectbox('Select Node to Remove', [''] + [node['id'] for node in nodes_data])
+    key_data = load_json('key.json')
 
+    # Sidebar panel
+    st.sidebar.header('Node Management')
+    
+    # Node Removal
+    st.sidebar.subheader('Node Removal')
+    node_to_remove = st.sidebar.selectbox('Select Node to Remove', [''] + [node['id'] for node in nodes_data])
     if st.sidebar.button('Remove Node'):
         if node_to_remove:
             nodes_data = remove_node(nodes_data, node_to_remove)
@@ -85,107 +84,9 @@ def main():
         else:
             st.sidebar.warning('Please select a node to remove.')
 
-    # Node editor
-    st.header('New Node')
-    new_node_name = st.text_input('New Node Name')
-    node_color = st.color_picker('Node Color')
-    
-    # Select target node for the link from the new node
-    target_node_for_link = st.selectbox('Select Target Node for Link (Optional)', [''] + [node['id'] for node in nodes_data])
-    
-    pdf_file = st.file_uploader('Upload PDF File (Required)', type='pdf')
-
-    # Boolean variable to track PDF upload
-    pdf_uploaded = pdf_file is not None
-
-    # Add Node button availability based on PDF upload
-    add_node_button = st.button('Add Node', disabled=not pdf_uploaded)
-
-    if add_node_button:
-        if not new_node_name or not pdf_file:
-            st.warning('Please provide a node name and upload a PDF file.')
-        else:
-            new_node = {'id': new_node_name, 'color': node_color}
-            nodes_data.append(new_node)
-            save_json(nodes_data, 'nodes.json')
-    
-            # Ensure directory exists before saving PDF file
-            pdf_dir = "pdfs"
-            os.makedirs(pdf_dir, exist_ok=True)
-    
-            pdf_file_name = f"{pdf_dir}/{new_node_name.replace(' ', '_')}.pdf"
-            with open(pdf_file_name, 'wb') as f:
-                f.write(pdf_file.getvalue())
-                
-            st.success('Node added successfully!')
-            
-            # Add link if a target node for the link is selected
-            if target_node_for_link:
-                new_link = {'source': new_node_name, 'target': target_node_for_link}
-                links_data.append(new_link)
-                save_json(links_data, 'links.json')
-                st.success('Link from the new node added successfully!')
-            time.sleep(1)
-            st.experimental_rerun()
-
-    # PDF updater
-    st.header('PDF Updater')
-    st.subheader('Update PDF for Node')
-    node_to_update_pdf = st.selectbox('Select Node', [''] + [node['id'] for node in nodes_data])
-    new_pdf_file = st.file_uploader('Upload New PDF File', type='pdf')
-
-    if st.button('Update PDF'):
-        if node_to_update_pdf:
-            if new_pdf_file:
-                pdf_file_path = update_pdf(nodes_data, node_to_update_pdf, new_pdf_file)
-                st.success(f'PDF for {node_to_update_pdf} updated successfully!')
-                time.sleep(1)
-                st.experimental_rerun()
-            else:
-                st.warning('Please upload a new PDF file.')
-        else:
-            st.warning('Please select a node.')
-
-    # Link editor
-    st.sidebar.header('Create Link')
-    source_node = st.sidebar.selectbox('Source Node', [''] + [node['id'] for node in nodes_data])
-    target_node = st.sidebar.selectbox('Target Node', [''] + [node['id'] for node in nodes_data])
-    if st.sidebar.button('Add Link'):
-        if source_node and target_node:
-            # Check if the source node and target node are different
-            if source_node != target_node:
-                # Check if the link doesn't already exist
-                if not any(link['source'] == source_node and link['target'] == target_node for link in links_data):
-                    new_link = {'source': source_node, 'target': target_node}
-                    links_data.append(new_link)
-                    save_json(links_data, 'links.json')
-                    st.sidebar.success('Link added successfully!')
-                    time.sleep(1)
-                    st.experimental_rerun()
-                else:
-                    st.sidebar.warning('The link already exists!')
-            else:
-                st.sidebar.warning('Source and target nodes cannot be the same!')
-        else:
-            st.sidebar.warning('Please select both source and target nodes for the link.')
-
-
-    # Link remover
-    st.sidebar.header('Link Removal')
-    selected_link = st.sidebar.selectbox('Links', [''] + [f"{link['source']} -> {link['target']}" for link in links_data])
-
-    if st.sidebar.button('Remove Link'):
-        if selected_link:
-            index_to_remove = [f"{link['source']} -> {link['target']}" for link in links_data].index(selected_link)
-            links_data = remove_link(links_data, index_to_remove)
-            save_json(links_data, 'links.json')
-            st.sidebar.success('Link removed successfully!')
-        else:
-            st.sidebar.warning('Please select a link to remove.')
-
-    st.sidebar.header('Change Node Name')
+    # Change Node Name
+    st.sidebar.subheader('Change Node Name')
     selected_node_for_name_change = st.sidebar.selectbox('Select Node', [''] + [node['id'] for node in nodes_data], key='select_node_name')
-
     if selected_node_for_name_change:
         new_node_name = st.sidebar.text_input('New Node Name', value=selected_node_for_name_change, key='new_node_name_input')
         if st.sidebar.button('Change Name', key='change_name_button'):
@@ -214,11 +115,10 @@ def main():
                     st.sidebar.warning('Please select a valid node.')
             else:
                 st.sidebar.warning('Please provide a new node name.')
-    
-    # Node color changer
-    st.sidebar.header('Change Node Color')
+
+    # Change Node Color
+    st.sidebar.subheader('Change Node Color')
     selected_node_for_color_change = st.sidebar.selectbox('Select Node', [''] + [node['id'] for node in nodes_data], key='select_node_color')
-    
     if selected_node_for_color_change:
         node_index = next((index for index, node in enumerate(nodes_data) if node['id'] == selected_node_for_color_change), None)
         if node_index is not None:
@@ -234,6 +134,163 @@ def main():
             st.sidebar.warning('Please select a valid node.')
     else:
         st.sidebar.warning('Please select a node to change its color.')
+
+    # Key Management
+    st.sidebar.header('Key Management')
+
+    # Add New Key
+    st.sidebar.subheader('Add New Key')
+    new_key_title = st.sidebar.text_input('New Key Title')
+    new_key_color = st.sidebar.color_picker('New Key Color')
+    if st.sidebar.button('Add New Key'):
+        if new_key_title:
+            key_data.append({'title': new_key_title, 'color': new_key_color})
+            st.sidebar.success('New key added successfully!')
+            save_json(key_data, 'key.json')  # Save modified key data to JSON file
+            time.sleep(1)
+            st.experimental_rerun()
+        else:
+            st.sidebar.warning('Please provide a title for the new key.')
+
+    # Edit Key Information
+    st.sidebar.subheader('Edit Key Information')
+    for index, key in enumerate(key_data):
+        st.sidebar.write(f"Key {index + 1}: {key['title']}")
+        new_title = st.sidebar.text_input(f'Title {key["title"]}', key=f'title_input_{index}', value=key['title'])
+        new_color = st.sidebar.color_picker(f'Color {key["title"]}', key['color'], key=f'color_picker_{index}')
+        key['title'] = new_title
+        key['color'] = new_color
+
+    # Remove Marked Keys
+    st.sidebar.subheader('Key Remover')
+    for index, key in enumerate(key_data):
+        remove_key = st.sidebar.checkbox(f'Remove Key {index + 1}', False, key=f'remove_checkbox_{index}_{key["title"]}')
+        if remove_key:
+            key['marked_for_removal'] = True
+    if st.sidebar.button('Remove Marked Keys'):
+        # List to store indices of keys marked for removal
+        keys_to_remove = []
+    
+        # Loop through the keys and mark those to be removed
+        for index, key in enumerate(key_data):
+            if key.get('marked_for_removal', False):
+                keys_to_remove.append(index)
+    
+        # Remove marked keys from the key_data list
+        for index in sorted(keys_to_remove, reverse=True):
+            del key_data[index]
+    
+        # Save modified key data to the JSON file
+        save_json(key_data, 'key.json')
+    
+        st.sidebar.success('Marked keys removed successfully!')
+        time.sleep(1)
+        st.experimental_rerun()
+
+    # Main Content Area
+    st.subheader('Node and Link Management')
+
+    # New Node Section
+    st.subheader('New Node')
+    new_node_name = st.text_input('New Node Name')
+    node_color = st.color_picker('Node Color')
+    target_node_for_link = st.selectbox('Select Target Node for Link (Optional)', [''] + [node['id'] for node in nodes_data])
+    pdf_file = st.file_uploader('Upload PDF File (Required)', type='pdf')
+    pdf_uploaded = pdf_file is not None
+    add_node_button = st.button('Add Node', disabled=not pdf_uploaded)
+    if add_node_button:
+        if not new_node_name or not pdf_file:
+            st.warning('Please provide a node name and upload a PDF file.')
+        else:
+            new_node = {'id': new_node_name, 'color': node_color}
+            nodes_data.append(new_node)
+            save_json(nodes_data, 'nodes.json')
+    
+            pdf_dir = "pdfs"
+            os.makedirs(pdf_dir, exist_ok=True)
+            pdf_file_name = f"{pdf_dir}/{new_node_name.replace(' ', '_')}.pdf"
+            with open(pdf_file_name, 'wb') as f:
+                f.write(pdf_file.getvalue())
+                
+            st.success('Node added successfully!')
+            
+            if target_node_for_link:
+                new_link = {'source': new_node_name, 'target': target_node_for_link}
+                links_data.append(new_link)
+                save_json(links_data, 'links.json')
+                st.success('Link from the new node added successfully!')
+            time.sleep(1)
+            st.experimental_rerun()
+
+    # PDF Updater
+    st.subheader('PDF Updater')
+    st.subheader('Update PDF for Node')
+    node_to_update_pdf = st.selectbox('Select Node', [''] + [node['id'] for node in nodes_data])
+    new_pdf_file = st.file_uploader('Upload New PDF File', type='pdf')
+    if st.button('Update PDF'):
+        if node_to_update_pdf:
+            if new_pdf_file:
+                pdf_file_path = update_pdf(nodes_data, node_to_update_pdf, new_pdf_file)
+                st.success(f'PDF for {node_to_update_pdf} updated successfully!')
+                time.sleep(1)
+                st.experimental_rerun()
+            else:
+                st.warning('Please upload a new PDF file.')
+        else:
+            st.warning('Please select a node.')
+
+    # Link Editor
+    st.subheader('Create Link')
+    source_node = st.selectbox('Source Node', [''] + [node['id'] for node in nodes_data])
+    target_node = st.selectbox('Target Node', [''] + [node['id'] for node in nodes_data])
+    if st.button('Add Link'):
+        if source_node and target_node:
+            if source_node != target_node:
+                if not any(link['source'] == source_node and link['target'] == target_node for link in links_data):
+                    new_link = {'source': source_node, 'target': target_node}
+                    links_data.append(new_link)
+                    save_json(links_data, 'links.json')
+                    st.success('Link added successfully!')
+                    time.sleep(1)
+                    st.experimental_rerun()
+                else:
+                    st.warning('The link already exists!')
+            else:
+                st.warning('Source and target nodes cannot be the same!')
+        else:
+            st.warning('Please select both source and target nodes for the link.')
+
+    # Link Remover
+    st.subheader('Link Removal')
+    selected_link = st.selectbox('Links', [''] + [f"{link['source']} -> {link['target']}" for link in links_data])
+    if st.button('Remove Link'):
+        if selected_link:
+            index_to_remove = [f"{link['source']} -> {link['target']}" for link in links_data].index(selected_link)
+            links_data = remove_link(links_data, index_to_remove)
+            save_json(links_data, 'links.json')
+            st.success('Link removed successfully!')
+        else:
+            st.warning('Please select a link to remove.')
+
+    # Unique Colors and Hex Values
+    st.subheader('Current Node Colors')
+    
+    # Define a function to create a colored square with the hex code
+    def color_square_with_hex(color, hex_code):
+        return f'<div style="display: inline-block; margin-right: 30px; vertical-align: middle; background-color: {color}; width: 40px; height: 40px;"></div> {hex_code}'
+    
+    unique_colors = list(set(node['color'] for node in nodes_data))
+    color_hex_pairs = [(color, color) for color in unique_colors]  # Assuming color variable already contains hex code
+    
+    # Group color-hex pairs by twos
+    pairs_grouped = [color_hex_pairs[i:i+2] for i in range(0, len(color_hex_pairs), 2)]
+    
+    # Display each pair of color and hex code on a line
+    for pairs in pairs_grouped:
+        line_html = " ".join(color_square_with_hex(pair[0], pair[1]) for pair in pairs)
+        st.markdown(line_html, unsafe_allow_html=True)
+
+
 
 
 if __name__ == '__main__':
