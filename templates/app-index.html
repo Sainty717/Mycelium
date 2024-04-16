@@ -12,10 +12,12 @@
         background-color: #1E1E1E; /* Set dark background color */
         color: #FFFFFF; /* Set text color to white */
     }
-
+    .hover-circle {
+        display: none; /* Initially hide the hover circle */
+    }
     .graph-container {
         width: 100%;
-        height: 100%;
+        height: calc(100% - 10px); /* Adjusted for controls height */
         cursor: grab;
         position: relative;
     }
@@ -32,6 +34,8 @@
     .node text {
       font-size: 12px;
       text-anchor: middle;
+      text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black; /* Add black outline */
+      z-index: 90;
     }
 
     .link {
@@ -46,14 +50,71 @@
       z-index: 9999;
     }
 
-    .node:hover .hover-circle {
-      display: block;
+    .controls-container {
+      position: absolute;
+      top: 60px; /* Adjusted for search and margin */
+      right: 30px;
+      z-index: 9999;
     }
 
-    .hover-circle {
-      display: none;
+    .node-controls {
+      margin-top: 10px;
     }
 
+    .toggle-switch {
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 34px;
+      transition: .4s;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      border-radius: 50%;
+      transition: .4s;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-switch2 {
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .slider-container {
+        margin-top: 10px;
+    }
+
+    .slider {
+        width: 100%;
+    }
     .pdf-window {
       position: absolute;
       background-color: #333;
@@ -68,9 +129,39 @@
       width: 800px; /* Twice as wide */
       height: 300px; /* Half as high */
     }
+    /* New style for the key list container */
+    .key-container {
+        position: absolute;
+        bottom: 20px; /* Adjust bottom position as needed */
+        right: 20px; /* Adjust right position as needed */
+    }
+
+    .key-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px; /* Adjust margin between items */
+    }
+
+    .key-circle {
+        width: 20px; /* Adjust circle size */
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px; /* Adjust margin between circle and text */
+    }
+
+    .key-text {
+        color: white;
+        font-size: 14px;
+    }
+    label {
+        display: block;
+        margin-top: 5px;
+        font-size: 14px;
+    }
   </style>
 </head>
 <body>
+  <!-- Search container -->
   <div class="search-container">
     <input list="nodes" type="text" id="searchInput" placeholder="Search node...">
     <datalist id="nodes">
@@ -79,17 +170,194 @@
     <button id="button" onclick="searchNode()">Go</button>
   </div>
 
-  <div class="graph-container">
-    <svg width="100%" height="100%">
-      <g id="container"></g>
-    </svg>
-    <div class="pdf-window" id="pdfWindow">
-      <button onclick="closePdfWindow()">Close</button>
-      <a href="#" target="_blank" id="openInTabLink">Open in new tab</a>
-    </div>
+<!-- Controls container 1 -->
+<div class="controls-container" style="top: 40px;">
+  <!-- Toggle switch for adjusting node radius -->
+  <div class="node-controls">
+    <label for="toggleSwitch">Dynamic Node Size</label>
+    <label class="toggle-switch">
+      <input type="checkbox" id="toggleSwitch" onchange="toggleNodeSize()">
+      <span class="toggle-slider"></span>
+    </label>
   </div>
 
+  <!-- Slider for adjusting node ID font size -->
+  <label for="fontSizeSlider">Font Size</label>
+  <div class="slider-container">
+    <input type="range" min="10" max="30" value="12" class="slider" id="fontSizeSlider" onchange="updateNodeFontSize(this.value)">
+
+  </div>
+</div>
+
+<!-- Graph container -->
+<div class="graph-container">
+  <svg width="100%" height="100%">
+    <g id="container"></g>
+  </svg>
+  <div class="pdf-window" id="pdfWindow">
+    <button onclick="closePdfWindow()">Close</button>
+    <a href="#" target="_blank" id="openInTabLink">Open in new tab</a>
+  </div>
+</div>
+<div class="key-container" id="key-container">
+  <!-- Keys will be populated here dynamically -->
+</div>
+
+<!-- Controls container 2 -->
+<div class="controls-container" style="top: 180px;">
+  <!-- Toggle switch for locking everything in position -->
+  <label for="lockToggle">Lock All Nodes</label>
+  <div class="node-controls">
+    <label class="toggle-switch">
+      <input type="checkbox" id="lockToggle" onchange="toggleLock()">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+  <!-- Slider for adjusting force strength -->
+  <label for="forceStrengthSlider">Force Strength</label>
+  <div class="slider-container">
+    <input type="range" min="-4000" max="0" value="-1100" class="slider" id="forceStrengthSlider" onchange="updateForceStrength(this.value)">
+
+  </div>
+</div>
+
+
   <script>
+    var defaultNodeRadius = 10;
+    var svg = d3.select("svg");
+    var container = d3.select("#container");
+
+    // Function to toggle node size
+    function toggleNodeSize() {
+      var toggleSwitch = document.getElementById("toggleSwitch");
+      var isChecked = toggleSwitch.checked;
+
+      if (isChecked) {
+        // Adjust node sizes based on the count of links for each node
+        updateNodeRadiusBasedOnLinks();
+      } else {
+        // Revert node sizes to default
+        updateNodeRadius(defaultNodeRadius);
+      }
+    }
+
+    // Function to update node radius based on sum of links
+    function updateNodeRadiusBasedOnLinks() {
+      var nodes = d3.selectAll(".node");
+      nodes.each(function(d) {
+        var nodeName = d.id;
+        var linkCount = countLinks(nodeName);
+        var radius = defaultNodeRadius + linkCount * 2;
+        d3.select(this).select("circle").attr("r", radius);
+      });
+    }
+
+    // Function to count the number of links associated with a node
+    function countLinks(nodeName) {
+      var links = {{ links|tojson|safe }};
+      var count = 0;
+      links.forEach(function(link) {
+        if (link.source === nodeName || link.target === nodeName) {
+          count++;
+        }
+      });
+      return count;
+    }
+
+    // Function to update node radius based on slider value
+    function updateNodeRadius(radius) {
+      var nodes = d3.selectAll(".node");
+      nodes.select("circle").attr("r", radius);
+    }
+    var defaultNodeRadius = 10; // Define the default radius of the node
+    
+    // Function to update node radius based on slider value
+    function updateNodeRadius(radius) {
+      var nodes = d3.selectAll(".node");
+      nodes.select("circle").attr("r", radius);
+    
+      // Update the radius of the hover circle based on the new node radius
+      nodes.select(".hover-circle").attr("r", radius / 2);
+    }
+    
+    // Function to update node radius based on the count of links for each node
+    function updateNodeRadiusBasedOnLinks() {
+      var nodes = d3.selectAll(".node");
+      nodes.each(function(d) {
+        var nodeName = d.id;
+        var linkCount = countLinks(nodeName);
+        var radius = defaultNodeRadius + linkCount * 2;
+        d3.select(this).select("circle").attr("r", radius);
+        d3.select(this).select(".hover-circle").attr("r", radius / 2); // Update the hover circle radius
+      });
+    }
+    
+    // Function to count the number of links associated with a node
+    function countLinks(nodeName) {
+      var links = {{ links|tojson|safe }};
+      var count = 0;
+      links.forEach(function(link) {
+        if (link.source === nodeName || link.target === nodeName) {
+          count++;
+        }
+      });
+      return count;
+    }
+    
+    // Function to handle changes in node ID font size slider
+    function updateNodeFontSize(fontSize) {
+      var nodes = d3.selectAll(".node");
+      nodes.select("text").style("font-size", fontSize + "px");
+    }
+    
+    // Rest of your code...
+
+    // Function to toggle lock on/off
+    function toggleLock() {
+      var lockToggle = document.getElementById("lockToggle");
+      var isLocked = lockToggle.checked;
+    
+      // Loop through all nodes
+      nodes.forEach(function(node) {
+        // Toggle the fixed position based on the lock status
+        node.fx = isLocked ? node.x : null;
+        node.fy = isLocked ? node.y : null;
+      });
+    
+      // Restart the simulation
+      simulation.alphaTarget(0.3).restart();
+    }
+    
+    // Function to update force strength based on slider value
+    function updateForceStrength(strength) {
+      simulation.force("charge", d3.forceManyBody().strength(strength));
+    }
+    // Function to fetch and render keys
+  function drawKey() {
+        d3.json('/key') // Fetch key data from Flask endpoint
+        .then(function(keys) {
+            var keyContainer = d3.select("#key-container");
+
+            // Append key items
+            var keyItems = keyContainer.selectAll(".key-item")
+                .data(keys)
+                .enter().append("div")
+                .attr("class", "key-item");
+
+            // Append circles representing the keys
+            keyItems.append("div")
+                .attr("class", "key-circle")
+                .style("background-color", function(d) { return d.color; });
+
+            // Append text representing the keys
+            keyItems.append("div")
+                .attr("class", "key-text")
+                .text(function(d) { return d.title; });
+        })
+        .catch(function(error) {
+            console.error('Error fetching key data:', error);
+        });
+    }
     var width = window.innerWidth,
         height = window.innerHeight;
     
@@ -296,10 +564,17 @@
     }
 
     function dragended(d) {
-        if (!d3.event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
+      if (!d3.event.active) simulation.alphaTarget(0);
+    
+      // Check if the "Lock Selected Node" toggle is checked
+      var lockToggle = document.getElementById("lockToggle");
+      var isLocked = lockToggle.checked;
+    
+      // Toggle the fixed position of the dragged node based on the lock state
+      d.fx = isLocked ? d.x : null;
+      d.fy = isLocked ? d.y : null;
     }
+
 
     restart();
 
@@ -359,6 +634,7 @@
     document.getElementById("button").addEventListener("click", function(event) {
       searchNode();
     });
+    drawKey();
   </script>
 </body>
 </html>
