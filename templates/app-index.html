@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AI Understanding</title>
-  <link rel="icon" type="image/x-icon" href="/pdfs/path1.png">
+  <title>{{ theme.pageTitle }}</title>
+  <link rel="icon" type="image/x-icon" href="{{ theme.faviconUrl }}">
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <style>
     body, html {
         height: 100%;
         margin: 0;
         overflow: hidden;
-        background-color: #1E1E1E; /* Set dark background color */
-        color: #FFFFFF; /* Set text color to white */
+        background-color: {{ theme.backgroundColor }};
+        color: {{ theme.textColor }};
+        position: relative; /* Set position relative to allow absolute positioning of logo */
+    }
+
+    .logo {
+        position: absolute;
+        top: 10px; /* Adjust top position as needed */
+        left: 10px; /* Adjust right position as needed */
+        width: 10%; /* Set width to 10% of the viewport width */
+        height: auto; /* Maintain aspect ratio */
+        z-index: 2; /* Set z-index lower than nodes and PDF windows but higher than graph */
     }
     .hover-circle {
         display: none; /* Initially hide the hover circle */
     }
     .graph-container {
         width: 100%;
-        height: calc(100% - 10px); /* Adjusted for controls height */
+        height: calc(100% - 110px); /* Adjusted for controls height */
         cursor: grab;
         position: relative;
     }
+
 
     .node {
       cursor: pointer;
@@ -155,8 +166,7 @@
   </style>
 </head>
 <body>
-  <!-- Search container -->
-  <div class="search-container">
+  <div class="search-container" style="display: {% if theme.controlPanelVisibility %} block {% else %} none {% endif %}">
     <input list="nodes" type="text" id="searchInput" placeholder="Search node...">
     <datalist id="nodes">
       <!-- Suggestions will be populated here dynamically -->
@@ -165,7 +175,7 @@
   </div>
 
 <!-- Controls container 1 -->
-<div class="controls-container" style="top: 45px;">
+<div class="controls-container" style="top: 45px;display: {% if theme.controlPanelVisibility %} block {% else %} none {% endif %}">
   <!-- Toggle switch for adjusting node radius -->
   <div class="node-controls">
     <label for="toggleSwitch">Dynamic Node Size</label>
@@ -177,7 +187,7 @@
 
   <!-- Slider for adjusting node ID font size -->
   <label for="fontSizeSlider">Font Size</label>
-  <div class="slider-container">
+  <div class="slider-container" style="display: {% if theme.controlPanelVisibility %} block {% else %} none {% endif %}" >
     <input type="range" min="10" max="30" value="12" class="slider" id="fontSizeSlider" onchange="updateNodeFontSize(this.value)">
 
   </div>
@@ -188,7 +198,7 @@
   <svg width="100%" height="100%">
     <g id="container"></g>
   </svg>
-  <div class="pdf-window" id="pdfWindow">
+  <div class="pdf-window" id="pdfWindow" >
     <button onclick="closePdfWindow()">Close</button>
     <a href="#" target="_blank" id="openInTabLink">Open in new tab</a>
   </div>
@@ -198,7 +208,7 @@
 </div>
 
 <!-- Controls container 2 -->
-<div class="controls-container" style="top: 150px;">
+<div class="controls-container" style="top: 150px;display: {% if theme.controlPanelVisibility %} block {% else %} none {% endif %}">
   <!-- Toggle switch for locking everything in position -->
   <label for="lockToggle">Lock All Nodes</label>
   <div class="node-controls">
@@ -214,9 +224,25 @@
 
   </div>
 </div>
-
+  <img src="{{ theme.logoImageUrl }}" alt="Logo" class="logo">
 
   <script>
+
+
+
+    fetch('path/to/theme.json')
+      .then(response => response.json())
+      .then(theme => {
+        // Apply theme settings
+        document.body.style.backgroundColor = theme.backgroundColor;
+        document.getElementById('linkColor').style.stroke = theme.linkColor;
+        document.getElementById('pageTitle').textContent = theme.pageTitle;
+        document.getElementById('favicon').href = theme.faviconUrl;
+        document.body.style.color = theme.textColor;
+        if (!theme.controlPanelVisibility) {
+          document.querySelector('.search-container').style.display = 'none';
+        }
+      });
     var defaultNodeRadius = 10;
     var svg = d3.select("svg");
     var container = d3.select("#container");
@@ -381,7 +407,7 @@
         .data(links)
         .enter().append("line")
         .attr("class", "link")
-        .style("stroke", "darkslategray")
+        .style("stroke", "{{ theme.linkColor }}") // Update link color here
         .style("stroke-width", "2px");
 
     var node = container.selectAll(".node")
@@ -402,7 +428,7 @@
         })
         .on("mouseout", function(d) {
             d3.select(this).select("circle").attr("fill", function(d) { return d.color; }); // Revert node color
-            d3.selectAll(".link").style("stroke", "darkslategray"); // Revert link color
+            d3.selectAll(".link").style("stroke", "{{ theme.linkColor }}"); // Revert link color
             d3.select(this).select(".hover-circle").style("display", "none");
             d3.select(this).select("button").transition().duration(300).style("opacity", 0); // Fade out button
         });
