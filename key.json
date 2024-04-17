@@ -1,0 +1,17 @@
+[
+  {
+    "title": "CPU Workload",
+    "color": "#000aff"
+  },
+  {
+    "title": "GPU Workload",
+    "color": "#00ff0f"
+  },
+  {
+    "title": "Topics",
+    "color": "#f78200"
+  }
+]
+
+
+
