@@ -6,7 +6,7 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <style>
     body, html {
-        height: 120%;
+        height: 110%;
         margin: 0;
         overflow: hidden;
         background-color: {{ theme.backgroundColor }};
@@ -136,9 +136,10 @@
     }
     /* New style for the key list container */
     .key-container {
-        position: absolute;
+        position: fixed;
         bottom: 20px; /* Adjust bottom position as needed */
         right: 20px; /* Adjust right position as needed */
+        z-index: 1000; /* Adjust z-index */
     }
 
     .key-item {
@@ -634,7 +635,7 @@
           
       }
     }
-
+drawKey();
     // Populate suggestions
     var suggestions = nodes.map(function(node) { return node.id; });
     var datalist = d3.select("#nodes");
