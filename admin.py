@@ -291,6 +291,70 @@ def main():
         st.markdown(line_html, unsafe_allow_html=True)
 
 
+    # Default theme values
+    default_theme = {
+        "backgroundColor": "#1E1E1E",
+        "linkColor": "#2F4F4F",
+        "logoImageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/85/TD_SYNNEX_logo_file.png",
+        "faviconUrl": "https://upload.wikimedia.org/584/commons/8/85/TD_SYNNEX_logo_file.png",
+        "pageTitle": "AI Understanding",
+        "textColor": "#FFFFFF",
+        "controlPanelVisibility": True
+    }
+    
+    # Streamlit app layout
+    st.title("Theme Editor")
+    
+    st.subheader("Theme Settings")
+    
+    # Background Color
+    background_color = st.color_picker("Background Color", value=default_theme["backgroundColor"])
+    
+    # Link Color
+    link_color = st.color_picker("Link Color", value=default_theme["linkColor"])
+    
+    # Logo Image URL
+    logo_image_url = st.text_input("Logo Image URL", value=default_theme["logoImageUrl"])
+    
+    # Favicon URL
+    favicon_url = st.text_input("Favicon URL", value=default_theme["faviconUrl"])
+    
+    # Page Title
+    page_title = st.text_input("Page Title", value=default_theme["pageTitle"])
+    
+    # Text Color
+    text_color = st.color_picker("Text Color", value=default_theme["textColor"])
+    
+    # Control Panel Visibility
+    control_panel_visibility = st.checkbox("Control Panel Visibility", value=default_theme["controlPanelVisibility"])
+    
+    # Reset to Default button
+    if st.button("Reset to Default"):
+        background_color = default_theme["backgroundColor"]
+        link_color = default_theme["linkColor"]
+        logo_image_url = default_theme["logoImageUrl"]
+        favicon_url = default_theme["faviconUrl"]
+        page_title = default_theme["pageTitle"]
+        text_color = default_theme["textColor"]
+        control_panel_visibility = default_theme["controlPanelVisibility"]
+    
+    # Save button
+    if st.button("Save"):
+        theme = {
+            "backgroundColor": background_color,
+            "linkColor": link_color,
+            "logoImageUrl": logo_image_url,
+            "faviconUrl": favicon_url,
+            "pageTitle": page_title,
+            "textColor": text_color,
+            "controlPanelVisibility": control_panel_visibility
+        }
+    
+        # Save theme to a JSON file
+        with open("theme.json", "w") as f:
+            json.dump(theme, f)
+    
+        st.success("Theme settings saved successfully!")
 
 
 if __name__ == '__main__':
