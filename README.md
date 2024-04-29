@@ -41,12 +41,13 @@ Set Admin Pannel Username and Password
 htpasswd -c ./htpasswd/.htpasswd <your new username>
 ```
 
-Use Docker Compose to build and run the Docker containers:
+Use Docker Compose to build and run the Docker containers: 
+
 
 ```
 docker-compose up -d --build
 ```
-
+(Sudo if your have not setup the User permissions for Docker.)
 
 
 ### Access the Applications
