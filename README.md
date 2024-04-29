@@ -71,6 +71,14 @@ Once the containers are up and running, you can access the applications using th
    docker compose up -d
 ```
    
-
+Admin Features
+    Security User and Password
+    Complete control over the Graph
+    Theme
+        Colors
+        Logo
+        Favicon
+        Title
+        Visibility of Control Panel
 
 
