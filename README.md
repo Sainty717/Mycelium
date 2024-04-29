@@ -1,6 +1,6 @@
 
 # Mycelium Web Application
-Hi There, I have built an app that allows you build your own super Dynamic Realationship graphs that link directly to docuementation, as an educational tool to better undrestand the realationship between complex topics products or concepts.
+Hi there! I have built an app that allows you to build your own super dynamic relationship graphs that link directly to documentation. It serves as an educational tool to better understand the relationships between complex topics, products, or concepts.
 
 Tested and running on Pi 4 and Pi 5 
 # Mycelium Web App
