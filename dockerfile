@@ -17,6 +17,8 @@ COPY admin.py .
 COPY path1.png .
 COPY nodes.json .
 COPY links.json .
+COPY key.json .
+
 # Install Flask and Streamlit
 RUN pip3 install flask streamlit
 
