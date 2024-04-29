@@ -1,8 +1,8 @@
 {
   "backgroundColor": "#1E1E1E",
   "linkColor": "darkslategray",
-  "logoImageUrl": "",
-  "faviconUrl": "",
+  "logoImageUrl": "/pdfs/path1.png",
+  "faviconUrl": "/pdfs/path1.png",
   "pageTitle": "AI Understanding",
   "textColor": "#FFFFFF",
   "controlPanelVisibility": true
