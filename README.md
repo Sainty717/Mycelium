@@ -47,7 +47,8 @@ Use Docker Compose to build and run the Docker containers:
 ```
 docker-compose up -d --build
 ```
-(Sudo if your have not setup the User permissions for Docker. however it is best to setup your docker permissions correctly  https://docs.docker.com/engine/install/linux-postinstall/)
+If you get an error here this is most likly that you have not setup your docker permissions correctly can do this by following this link https://docs.docker.com/engine/install/linux-postinstall/
+or Run as ``` sudo ``` before the command however this is not reccomend for security resaons. 
 
 
 ### Access the Applications
