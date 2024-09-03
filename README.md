@@ -93,7 +93,7 @@ Once the containers are up and running, you can access the applications using th
 - **Mycelium App (Flask)**: [http://localhost](http://localhost)
 - **PDF Viewer**: [http://localhost/pdf](http://localhost/pdfs)
 - **Mycelium Admin Panel**: [http://localhost/admin](http://localhost/admin)
-- **Nginx Plus Dashboard**: [http://localhost/dashboard.html]
+- **Nginx Plus Dashboard**: [http://localhost/dashboard.html](http://localhost/dashboard.html)
 
 ### Admin Features
 
