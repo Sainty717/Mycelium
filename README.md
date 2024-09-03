@@ -25,7 +25,7 @@ Make sure you have Docker,Docker Compose and apache2-utils installed on your sys
 
 Clone this repository to your local machine using Git:
 ```
-git clone https://github.com/your_username/flask-streamlit-docker.git
+wget https://codeload.github.com/Sainty717/Mycelium/zip/refs/heads/Nginx-Plus-Demo
 ```
 
 
