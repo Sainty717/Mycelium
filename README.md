@@ -63,7 +63,7 @@ htpasswd -c ./htpasswd/.htpasswd <your_new_username>
 
 ### Docker Image Repository Login and Image Pull
 
-1. Open the JSON Web Token file previously downloaded from the MyF5 customer portal (e.g., `nginx-repo-12345abc.jwt`) and copy its contents.
+1. Open the JWT previously downloaded from the MyF5 customer portal (e.g., `nginx-repo-12345abc.jwt`) and copy its contents.
 
 2. Log in to the Docker registry using the contents of the JSON Web Token file:
 
