@@ -34,7 +34,7 @@ unzip Nginx-Plus-Demo.zip
 
 Navigate into the cloned repository directory:
 ```
-cd Mycelium
+cd \Mycelium-Nginx-Plus-Demo
 ```
 Set Admin Pannel Username and Password
 
