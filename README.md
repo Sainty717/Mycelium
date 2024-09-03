@@ -41,19 +41,14 @@ Set Admin Pannel Username and Password
 ```
 htpasswd -c ./htpasswd/.htpasswd <your new username>
 ```
-### NGINX Plus Setup
+## NGINX Plus Setup
 
-    Sign up for the NGINX Plus free trial.
+1. Sign up for the [NGINX Plus free trial](https://www.f5.com/trials/free-trial-nginx-plus-and-nginx-app-protect).
+3. After registering, you’ll receive two emails. Follow the instructions in the second email to activate your trial.
+4. Once activated, you’ll obtain two essential files: the certificate and the private key.
+5. Save these files in the following directory within your project:
 
-    After registering, you’ll receive two emails. Follow the instructions in the second email to activate your trial.
-
-    Once activated, you’ll obtain two essential files: the certificate and the private key.
-
-    Save these files in the following directory within your project:
-
-    bash
-
-/Mycelium/ssl/
+``` /Mycelium/ssl/ ```
 
 Name the files:
 
