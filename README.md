@@ -51,15 +51,15 @@ htpasswd -c ./htpasswd/.htpasswd <your_new_username>
 
 1. Sign up for the [NGINX Plus free trial](https://www.f5.com/trials/free-trial-nginx-plus-and-nginx-app-protect).
 2. After registering, you’ll receive two emails. Follow the instructions in the second email to activate your trial.
-3. Once activated, you’ll obtain two essential files: the certificate and the private key.
+3. Once activated, you’ll obtain 3 essential files: the certificate,WJT (we will use this one later) and private key.
 4. Save these files in the following directory within your project:
 
    ```/Mycelium/ssl/```
 
    Name the files:
 
-   - `nginx-repo.crt`
-   - `nginx-repo.key`
+   - `nginx-repo.crt` certificate
+   - `nginx-repo.key` private key
 
 ### Docker Image Repository Login and Image Pull
 
@@ -71,10 +71,10 @@ htpasswd -c ./htpasswd/.htpasswd <your_new_username>
    docker login private-registry.nginx.com --username=<output_of_jwt_token> --password=none
    ```
 
-3. Next, pull the image you need from `private-registry.nginx.com`. Replace `<version-tag>` with the specific NGINX Plus version or the NGINX Plus version and OS version you need. For example, `r32-ubi-9`.
+3. Next, pull the image you need from `private-registry.nginx.com`.
 
    ```bash
-   docker pull private-registry.nginx.com/nginx-plus/base:<version-tag>
+   docker pull private-registry.nginx.com/nginx-plus/base:r32-debian
    ```
 
 ### Build and Run the Application
