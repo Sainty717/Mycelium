@@ -1,24 +1,23 @@
-version: '3'
+  GNU nano 7.2                                     ../docker-compose.yaml                                               version: '3'
 services:
   app:
     build: .
-    # Ports are not needed if your using Nignx
-    #ports:
-    #  - "8501:8501"
-    #  - "8502:8502"
-    #  - "8503:8503"
     volumes:
       - user_data:/User
+    restart: unless-stopped
 
   nginx:
-    image: nginx:latest
+    image: private-registry.nginx.com/nginx-plus/base:r32-debian
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./htpasswd/.htpasswd:/etc/nginx/.htpasswd
+      - ./ssl/nginx-repo.crt:/etc/ssl/nginx/nginx-repo.crt
+      - ./ssl/nginx-repo.key:/etc/ssl/nginx/nginx-repo.key
     depends_on:
       - app
+    restart: unless-stopped
 
 volumes:
   user_data:
