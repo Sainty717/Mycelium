@@ -21,6 +21,7 @@ Make sure you have Docker,Docker Compose and apache2-utils installed on your sys
 - apache2-utils for setting the password
   ``` sudo apt install apache2-utils ```
 
+
 ### Clone the Repository
 
 Clone this repository to your local machine using Git:
@@ -40,6 +41,26 @@ Set Admin Pannel Username and Password
 ```
 htpasswd -c ./htpasswd/.htpasswd <your new username>
 ```
+### NGINX Plus Setup
+
+    Sign up for the NGINX Plus free trial.
+
+    After registering, you’ll receive two emails. Follow the instructions in the second email to activate your trial.
+
+    Once activated, you’ll obtain two essential files: the certificate and the private key.
+
+    Save these files in the following directory within your project:
+
+    bash
+
+/Mycelium/ssl/
+
+Name the files:
+
+    nginx-repo.crt
+    nginx-repo.key
+
+
 
 Use Docker Compose to build and run the Docker containers: 
 
