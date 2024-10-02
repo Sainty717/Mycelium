@@ -31,7 +31,7 @@ Make sure you have Docker, Docker Compose, and apache2-utils installed on your s
 
 Clone this repository to your local machine using Git:
 ```bash
-wget https://codeload.github.com/Sainty717/Mycelium/zip/refs/heads/Nginx-Plus-Demo
+wget [https://codeload.github.com/Sainty717/Mycelium/zip/refs/heads/Nginx-Plus-Demo](https://codeload.github.com/Sainty717/Mycelium/zip/refs/heads/Nginx-Plus-Demo)
 unzip Nginx-Plus-Demo.zip
 ```
 
